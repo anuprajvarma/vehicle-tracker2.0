@@ -28,46 +28,53 @@ const previousDayPath: L.LatLngExpression[] = [
   [19.118, 72.833],
   [19.121, 72.837],
   [19.123, 72.835],
+  [19.123, 72.834],
 ];
 
+// This Week Path
 const thisWeekPath: L.LatLngExpression[] = [
-  [19.123, 72.835],
-  [19.125, 72.838],
-  [19.129, 72.842],
-  [19.132, 72.846],
-  [19.131, 72.851],
-  [19.126, 72.849],
-  [19.123, 72.835],
+  [19.123, 72.835], // origin
+  [19.126, 72.839],
+  [19.128, 72.842],
+  [19.131, 72.847],
+  [19.128, 72.851],
+  [19.125, 72.846],
+  [19.123, 72.835], // back to origin
 ];
 
+// Previous Week Path
 const previousWeekPath: L.LatLngExpression[] = [
-  [19.123, 72.835],
-  [19.12, 72.832],
-  [19.116, 72.83],
-  [19.114, 72.834],
-  [19.117, 72.838],
-  [19.123, 72.835],
+  [19.123, 72.835], // origin
+  [19.121, 72.831],
+  [19.117, 72.827],
+  [19.114, 72.829],
+  [19.116, 72.834],
+  [19.12, 72.837],
+  [19.123, 72.835], // back to origin
 ];
 
+// This Month Path
 const thisMonthPath: L.LatLngExpression[] = [
-  [19.123, 72.835],
-  [19.127, 72.837],
-  [19.13, 72.839],
-  [19.134, 72.843],
-  [19.137, 72.849],
-  [19.132, 72.853],
-  [19.128, 72.85],
-  [19.123, 72.835],
+  [19.123, 72.835], // origin
+  [19.128, 72.836],
+  [19.132, 72.839],
+  [19.135, 72.843],
+  [19.138, 72.848],
+  [19.134, 72.852],
+  [19.128, 72.849],
+  [19.123, 72.835], // back to origin
 ];
 
+// Previous Month Path
 const previousMonthPath: L.LatLngExpression[] = [
-  [19.123, 72.835],
-  [19.119, 72.83],
-  [19.115, 72.828],
-  [19.111, 72.832],
-  [19.113, 72.837],
-  [19.118, 72.84],
-  [19.123, 72.835],
+  [19.123, 72.835], // origin
+  [19.118, 72.832],
+  [19.113, 72.829],
+  [19.11, 72.83],
+  [19.112, 72.835],
+  [19.117, 72.839],
+  [19.121, 72.837],
+  [19.123, 72.835], // back to origin
 ];
 
 const DefaultIcon = L.icon({
@@ -78,6 +85,20 @@ const DefaultIcon = L.icon({
 export default function LeafletMap() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("Today");
+  const [path, setpath] = useState<L.LatLngExpression[]>([
+    [19.123, 72.835],
+    [19.124, 72.837],
+    [19.127, 72.84],
+    [19.13, 72.845],
+    [19.128, 72.848],
+    [19.124, 72.846],
+    [19.123, 72.835],
+  ]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOption(e.target.value);
+  };
 
   useEffect(() => {
     if (currentIndex >= todayPath.length - 1) return;
@@ -90,13 +111,30 @@ export default function LeafletMap() {
   }, [currentIndex]);
 
   useEffect(() => {
+    console.log("aljkdfljks");
     L.Marker.prototype.options.icon = DefaultIcon;
   }, []);
+
+  const showpolyline = () => {
+    if (selectedOption === "Today") {
+      setpath(todayPath);
+    } else if (selectedOption === "Previous day") {
+      setpath(previousDayPath);
+    } else if (selectedOption === "This week") {
+      setpath(thisWeekPath);
+    } else if (selectedOption === "Previous week") {
+      setpath(previousWeekPath);
+    } else if (selectedOption === "This month") {
+      setpath(thisMonthPath);
+    } else {
+      setpath(previousMonthPath);
+    }
+  };
 
   return (
     <div className="relative h-screen w-full">
       <MapContainer
-        center={todayPath[0]}
+        center={path[0]}
         zoom={15}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
@@ -107,10 +145,10 @@ export default function LeafletMap() {
         />
 
         {/* Path lines with arrows */}
-        <PathWithArrows positions={todayPath} color="blue" />
-        <PathWithArrows positions={previousDayPath} color="orange" />
+        <PathWithArrows positions={path} color="blue" />
+        {/* <PathWithArrows positions={previousDayPath} color="orange" /> */}
 
-        <Marker position={todayPath[currentIndex]}>
+        <Marker position={path[currentIndex]}>
           <Popup>
             <div className="w-[15rem] h-[30rem] flex flex-col gap-4 py-5 text-xs">
               <div className="flex justify-between h-6">
@@ -174,7 +212,11 @@ export default function LeafletMap() {
                   <option value="WIRED">WIRED</option>
                 </select>
 
-                <select className="border px-2 py-1 rounded">
+                <select
+                  value={selectedOption}
+                  onChange={handleChange}
+                  className="border px-2 py-1 rounded"
+                >
                   <option value="Today">Today</option>
                   <option value="Previous day">Previous day</option>
                   <option value="This week">This week</option>
@@ -185,6 +227,7 @@ export default function LeafletMap() {
 
                 <button
                   type="button"
+                  onClick={showpolyline}
                   className="text-white bg-blue-600 hover:bg-blue-700 px-5 py-1 rounded"
                 >
                   Show
