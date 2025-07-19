@@ -6,9 +6,11 @@ import L from "leaflet";
 import { useEffect, useState } from "react";
 import { GoClock } from "react-icons/go";
 import { FaCarAlt } from "react-icons/fa";
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
+// import icon from "leaflet/dist/images/marker-icon.png";
+// import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import { IoPlay } from "react-icons/io5";
 import { PiMapPinFill } from "react-icons/pi";
+import { RxCountdownTimer } from "react-icons/rx";
 import PathWithArrows from "./Direction";
 
 const todayPath: L.LatLngExpression[] = [
@@ -78,14 +80,16 @@ const previousMonthPath: L.LatLngExpression[] = [
 ];
 
 const DefaultIcon = L.icon({
-  iconUrl: (icon as any).src || icon,
-  shadowUrl: (iconShadow as any).src || iconShadow,
+  iconUrl: "./vehicle.svg",
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
 });
 
 export default function LeafletMap() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [showFilters, setShowFilters] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("Today");
+  let interval;
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string>("");
   const [path, setpath] = useState<L.LatLngExpression[]>([
     [19.123, 72.835],
     [19.124, 72.837],
@@ -100,34 +104,58 @@ export default function LeafletMap() {
     setSelectedOption(e.target.value);
   };
 
+  //   useEffect(() => {
+  //     if (currentIndex >= todayPath.length - 1) return;
+
+  //     const interval = setInterval(() => {
+  //       console.log("asdjfsjdflj " + currentIndex + todayPath.length);
+  //       setCurrentIndex((prev) => prev + 1);
+  //     }, 1000); // change speed here (1000ms = 1s)
+
+  //     return () => clearInterval(interval);
+  //   }, [currentIndex]);
+
+  const play = () => {
+    if (currentIndex >= todayPath.length - 1) {
+      console.log("Already at the end");
+      return; // ✅ Exit early
+    }
+
+    const intervalId = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        if (prevIndex >= todayPath.length - 1) {
+          clearInterval(intervalId); // ✅ Stop when done
+          return prevIndex;
+        }
+        return prevIndex + 1;
+      });
+    }, 1000);
+  };
+
   useEffect(() => {
-    if (currentIndex >= todayPath.length - 1) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => prev + 1);
-    }, 1000); // change speed here (1000ms = 1s)
-
-    return () => clearInterval(interval);
-  }, [currentIndex]);
-
-  useEffect(() => {
-    console.log("aljkdfljks");
     L.Marker.prototype.options.icon = DefaultIcon;
   }, []);
 
   const showpolyline = () => {
+    setCurrentIndex(0);
     if (selectedOption === "Today") {
       setpath(todayPath);
+      setShowFilters(false);
     } else if (selectedOption === "Previous day") {
       setpath(previousDayPath);
+      setShowFilters(false);
     } else if (selectedOption === "This week") {
       setpath(thisWeekPath);
+      setShowFilters(false);
     } else if (selectedOption === "Previous week") {
       setpath(previousWeekPath);
+      setShowFilters(false);
     } else if (selectedOption === "This month") {
       setpath(thisMonthPath);
+      setShowFilters(false);
     } else {
       setpath(previousMonthPath);
+      setShowFilters(false);
     }
   };
 
@@ -178,7 +206,31 @@ export default function LeafletMap() {
       </MapContainer>
 
       {/* Bottom Accordion Filter */}
-      <div className="fixed bottom-7 left-0 w-full flex justify-center z-[999] text-black">
+      <div className="fixed bottom-7 left-0 w-full flex flex-col gap-2 justify-center items-center z-[999] text-black">
+        <div className="w-[50rem] flex gap-4 items-center bg-white shadow-lg rounded p-4">
+          <div className="w-[25rem] bg-gray-200 rounded-full h-1.5 mb-4 dark:bg-gray-700">
+            <div
+              className="bg-blue-600 h-1.5 rounded-full dark:bg-blue-500"
+              style={{ width: "45%" }}
+            ></div>
+          </div>
+          <div className="flex gap-6">
+            <button
+              type="button"
+              onClick={play}
+              className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
+            >
+              <IoPlay />
+            </button>
+            <button
+              type="button"
+              onClick={showpolyline}
+              className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
+            >
+              <RxCountdownTimer size={16} />
+            </button>
+          </div>
+        </div>
         <div className="w-[50rem] bg-white shadow-lg rounded">
           <button
             onClick={() => setShowFilters(!showFilters)}
