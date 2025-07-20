@@ -137,7 +137,7 @@ export default function LeafletMap() {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
         {notrack ? <PathWithArrows positions={path} color="blue" /> : <></>}
-        <Marker position={path[currentIndex]}>
+        <Marker position={notrack ? path[currentIndex] : [25.1367, 82.56]}>
           <Popup>
             <div className="w-[15rem] h-[30rem] flex flex-col gap-4 py-5 text-xs">
               <div className="flex justify-between h-6">
