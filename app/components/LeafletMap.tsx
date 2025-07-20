@@ -15,66 +15,14 @@ import { RxCountdownTimer } from "react-icons/rx";
 import PathWithArrows from "./Direction";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
-
-const todayPath: L.LatLngExpression[] = [
-  [25.145346, 82.570056], // Bhatwa Ki Pokhari
-  [25.1505, 82.5695], // Ghantaghar (Clock Tower)
-  [25.147, 82.568], // Pethi Ka Chaurha
-  [25.1455, 82.5707], // Ghirdhar Ka Chaurha
-  [25.1442, 82.5688], // City Cart (central area)
-  [25.13496, 82.56844], // Mirzapur Station :contentReference[oaicite:1]{index=1}
-  [25.1337, 82.56443], // Shuklha Road (near city center) :contentReference[oaicite:2]{index=2}
-];
-
-const previousDayPath: L.LatLngExpression[] = [
-  [25.1462, 82.5709],
-  [25.1475, 82.5697],
-  [25.148, 82.5678],
-  [25.1457, 82.5671],
-  [25.1449, 82.5663],
-  [25.1436, 82.5652],
-  [25.1337, 82.56443],
-];
-
-const thisWeekPath: L.LatLngExpression[] = [
-  [25.1345, 82.5661],
-  [25.136, 82.567],
-  [25.1381, 82.5687],
-  [25.1404, 82.5699],
-  [25.1432, 82.5712],
-  [25.1453, 82.572],
-  [25.1337, 82.56443],
-];
-
-const previousWeekPath: L.LatLngExpression[] = [
-  [25.139, 82.5648],
-  [25.1406, 82.5663],
-  [25.142, 82.5679],
-  [25.1437, 82.5691],
-  [25.1451, 82.5703],
-  [25.1465, 82.571],
-  [25.1337, 82.56443],
-];
-
-const thisMonthPath: L.LatLngExpression[] = [
-  [25.1328, 82.564],
-  [25.1341, 82.5654],
-  [25.1359, 82.5668],
-  [25.1377, 82.568],
-  [25.1402, 82.5693],
-  [25.1424, 82.5705],
-  [25.1445, 82.5717],
-];
-
-const previousMonthPath: L.LatLngExpression[] = [
-  [25.1305, 82.5632],
-  [25.1322, 82.5647],
-  [25.1343, 82.566],
-  [25.1367, 82.5674],
-  [25.1391, 82.5688],
-  [25.1414, 82.5702],
-  [25.1436, 82.5716],
-];
+import {
+  todayPath,
+  previousDayPath,
+  thisWeekPath,
+  thisMonthPath,
+  previousWeekPath,
+  previousMonthPath,
+} from "../constants/pathData";
 
 const DefaultIcon = L.icon({
   iconUrl: "./vehicle.svg",
