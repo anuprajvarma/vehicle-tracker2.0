@@ -34,7 +34,7 @@ export default function LeafletMap() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [showFilters, setShowFilters] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOption, setSelectedOption] = useState<string>("Today");
   const [playpause, setplaypause] = useState<boolean>(false);
   const [tracker, setTracker] = useState(0);
   const vspeedRef = useRef(1000);
