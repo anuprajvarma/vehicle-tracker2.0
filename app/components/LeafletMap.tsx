@@ -6,8 +6,6 @@ import L from "leaflet";
 import { useEffect, useState, useRef } from "react";
 import { GoClock } from "react-icons/go";
 import { FaCarAlt } from "react-icons/fa";
-// import icon from "leaflet/dist/images/marker-icon.png";
-// import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import { IoPlay } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 import { PiMapPinFill } from "react-icons/pi";
@@ -23,6 +21,7 @@ import {
   previousWeekPath,
   previousMonthPath,
 } from "../constants/pathData";
+import RecenterMap from "./RecenterMap";
 
 const DefaultIcon = L.icon({
   iconUrl: "./vehicle.svg",
@@ -38,9 +37,9 @@ export default function LeafletMap() {
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [playpause, setplaypause] = useState<boolean>(false);
   const [tracker, setTracker] = useState(0);
-  //   const [vspeed, setVspeed] = useState(1000);
   const vspeedRef = useRef(1000);
   const [speed, setSpeed] = useState(1);
+  const [notrack, setNoTrack] = useState(false);
   const [path, setpath] = useState<L.LatLngExpression[]>([
     [25.145346, 82.570056],
     [25.1505, 82.5695],
@@ -55,36 +54,14 @@ export default function LeafletMap() {
     setSelectedOption(e.target.value);
   };
 
-  const valuetext = (value: number) => {
-    console.log("valu " + value);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    setTimeout(() => {
-      if (value > 1) {
-        console.log("settimeout");
-
-        play("play");
-      }
-    }, 1000);
-
-    vspeedRef.current = value * 1000;
-    return `${value}°C`;
-  };
-
   const play = (action: string) => {
     if (action === "play") {
-      //   if (tracker !== 0) {
-      //     setTracker(0);
-      //   }
       if (currentIndex >= todayPath.length - 1) {
-        console.log("Already at the end");
         setCurrentIndex(0);
         setTracker(0);
       }
       setplaypause(true);
       intervalRef.current = setInterval(() => {
-        console.log(vspeedRef.current);
         setTracker((prev) => {
           return prev + 100 / path.length;
         });
@@ -124,6 +101,7 @@ export default function LeafletMap() {
 
   const showpolyline = () => {
     setCurrentIndex(0);
+    setNoTrack(true);
     if (selectedOption === "Today") {
       setpath(todayPath);
       setShowFilters(false);
@@ -153,11 +131,12 @@ export default function LeafletMap() {
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
       >
+        <RecenterMap center={path[0]} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <PathWithArrows positions={path} color="blue" />
+        {notrack ? <PathWithArrows positions={path} color="blue" /> : <></>}
         <Marker position={path[currentIndex]}>
           <Popup>
             <div className="w-[15rem] h-[30rem] flex flex-col gap-4 py-5 text-xs">
@@ -187,58 +166,61 @@ export default function LeafletMap() {
         </Marker>
       </MapContainer>
 
-      {/* Bottom Accordion Filter */}
-      <div className="fixed bottom-7 left-0 w-full flex flex-col gap-2 justify-center items-center z-[999] text-black">
-        <div className="w-[50rem] flex gap-4 items-center bg-white shadow-lg rounded p-4">
-          <div className="w-[25rem] flex items-center bg-gray-200 rounded-full h-1.5 mb-4 dark:bg-gray-700">
-            <div
-              className={`bg-blue-600 h-1.5 rounded-l-full dark:bg-blue-500`}
-              style={{ width: `${tracker}%` }}
-            ></div>
-            <div className="bg-blue-600 h-3.5 w-3.5 rounded-full dark:bg-blue-500"></div>
-          </div>
-          <div className="flex gap-6">
-            <div className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl">
-              {playpause ? (
-                <FaPause onClick={() => play("pause")} />
-              ) : (
-                <IoPlay onClick={() => play("play")} />
-              )}
+      <div className="fixed bottom-2 left-0 w-full flex flex-col gap-2 justify-center items-center z-[999] text-black">
+        {notrack ? (
+          <div className="w-[50rem] flex gap-4 items-center bg-white shadow-lg rounded p-4">
+            <div className="w-[25rem] flex items-center bg-gray-200 rounded-full h-1.5 mb-4 dark:bg-gray-700">
+              <div
+                className={`bg-blue-600 h-1.5 rounded-l-full dark:bg-blue-500`}
+                style={{ width: `${tracker}%` }}
+              ></div>
+              <div className="bg-blue-600 h-3.5 w-3.5 rounded-full dark:bg-blue-500"></div>
             </div>
-            <button
-              type="button"
-              onClick={() => play("reset")}
-              className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
-            >
-              <RxCountdownTimer size={16} />
-            </button>
-            <Box sx={{ width: 150 }}>
-              <Slider
-                color="secondary"
-                aria-label="Temperature"
-                defaultValue={1}
-                value={speed}
-                onChange={(e, newValue) => setSpeed(newValue)}
-                onChangeCommitted={(e, newValue) => {
-                  vspeedRef.current = newValue * 1000;
-                  if (intervalRef.current) {
-                    console.log("adioafsdl");
-                    clearInterval(intervalRef.current);
-                    play("play");
-                  } else {
-                    play("play");
-                  }
-                }}
-                valueLabelDisplay="auto"
-                shiftStep={2}
-                step={1}
-                marks
-                min={1}
-                max={5}
-              />
-            </Box>
+            <div className="flex gap-6">
+              <div className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl">
+                {playpause ? (
+                  <FaPause onClick={() => play("pause")} />
+                ) : (
+                  <IoPlay onClick={() => play("play")} />
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => play("reset")}
+                className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
+              >
+                <RxCountdownTimer size={16} />
+              </button>
+              <Box sx={{ width: 150 }}>
+                <Slider
+                  color="secondary"
+                  aria-label="Temperature"
+                  defaultValue={1}
+                  value={speed}
+                  onChange={(e, newValue) => setSpeed(newValue)}
+                  onChangeCommitted={(e, newValue) => {
+                    vspeedRef.current = newValue * 1000;
+                    if (intervalRef.current) {
+                      console.log("adioafsdl");
+                      clearInterval(intervalRef.current);
+                      play("play");
+                    } else {
+                      play("play");
+                    }
+                  }}
+                  valueLabelDisplay="auto"
+                  shiftStep={2}
+                  step={1}
+                  marks
+                  min={1}
+                  max={5}
+                />
+              </Box>
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
         <div className="w-[50rem] bg-white shadow-lg rounded">
           <button
             onClick={() => setShowFilters(!showFilters)}
