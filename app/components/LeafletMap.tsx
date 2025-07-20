@@ -92,6 +92,7 @@ export default function LeafletMap() {
   const [tracker, setTracker] = useState(0);
   //   const [vspeed, setVspeed] = useState(1000);
   const vspeedRef = useRef(1000);
+  const [speed, setSpeed] = useState(1);
   const [path, setpath] = useState<L.LatLngExpression[]>([
     [25.145346, 82.570056],
     [25.1505, 82.5695],
@@ -107,7 +108,18 @@ export default function LeafletMap() {
   };
 
   const valuetext = (value: number) => {
-    console.log(value);
+    console.log("valu " + value);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    setTimeout(() => {
+      if (value > 1) {
+        console.log("settimeout");
+
+        play("play");
+      }
+    }, 1000);
+
     vspeedRef.current = value * 1000;
     return `${value}°C`;
   };
@@ -141,8 +153,14 @@ export default function LeafletMap() {
         });
       }, vspeedRef.current);
     } else if (action === "reset") {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
       setCurrentIndex(0);
       setTracker(0);
+      setplaypause(false);
+      setSpeed(1);
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -251,7 +269,18 @@ export default function LeafletMap() {
                 color="secondary"
                 aria-label="Temperature"
                 defaultValue={1}
-                getAriaValueText={valuetext}
+                value={speed}
+                onChange={(e, newValue) => setSpeed(newValue)}
+                onChangeCommitted={(e, newValue) => {
+                  vspeedRef.current = newValue * 1000;
+                  if (intervalRef.current) {
+                    console.log("adioafsdl");
+                    clearInterval(intervalRef.current);
+                    play("play");
+                  } else {
+                    play("play");
+                  }
+                }}
                 valueLabelDisplay="auto"
                 shiftStep={2}
                 step={1}
