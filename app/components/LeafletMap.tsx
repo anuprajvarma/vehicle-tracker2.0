@@ -11,7 +11,6 @@ import { FaPause } from "react-icons/fa6";
 import { PiMapPinFill } from "react-icons/pi";
 import { RxCountdownTimer } from "react-icons/rx";
 import { BsFuelPumpFill } from "react-icons/bs";
-import { getVehicleIcon } from "./HelperFuntion";
 import { MdBatteryFull } from "react-icons/md";
 import PathWithArrows from "./Direction";
 import Slider from "@mui/material/Slider";
@@ -66,8 +65,61 @@ export default function LeafletMap() {
     [25.1337, 82.56443],
   ]);
 
-  const icon = getVehicleIcon(
-    playpause === false ? "/redvehicle.png" : "/bluevehicle.png"
+  function getBearing(start: [number, number], end: [number, number]) {
+    if (end !== undefined) {
+      const [lat1, lon1] = start.map((deg) => (deg * Math.PI) / 180);
+      const [lat2, lon2] = end.map((deg) => (deg * Math.PI) / 180);
+      console.log("lon " + lon2);
+      const dLon = lon2 - lon1;
+
+      const y = Math.sin(dLon) * Math.cos(lat2);
+      const x =
+        Math.cos(lat1) * Math.sin(lat2) -
+        Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+      const angle = (Math.atan2(y, x) * 180) / Math.PI;
+      return (angle + 360) % 360;
+    }
+  }
+
+  const getRotatedIcon = (iconUrl: string, angle: number) =>
+    L.divIcon({
+      className: "",
+      html: `
+        <div style="transform: rotate(${angle}deg); width: 40px; height: 40px;">
+          <img src="${iconUrl}" style="width: 100%; height: 100%; transform: rotate(0deg);" />
+        </div>
+      `,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+    });
+
+  //   const icon = getVehicleIcon(
+  //     playpause === false ? "/redvehicle.png" : "/bluevehicle.png"
+  //   );
+
+  function toLatLngTuple(
+    pos: L.LatLngExpression | undefined
+  ): [number, number] {
+    if (!pos) return [0, 0];
+
+    if (Array.isArray(pos)) {
+      return pos as [number, number];
+    } else if ("lat" in pos && "lng" in pos) {
+      return [pos.lat, pos.lng];
+    } else {
+      throw new Error("Invalid LatLngExpression");
+    }
+  }
+
+  const angle = getBearing(
+    toLatLngTuple(path[currentIndex]),
+    toLatLngTuple(path[currentIndex + 1])
+  );
+
+  const icon = getRotatedIcon(
+    playpause ? "/bluevehicle.png" : "/redvehicle.png",
+    angle ?? 0
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -117,6 +169,7 @@ export default function LeafletMap() {
 
   const showpolyline = () => {
     setCurrentIndex(0);
+    setTracker(0);
     setNoTrack(true);
     if (selectedOption === "Today") {
       setpath(todayPath);
@@ -232,16 +285,14 @@ export default function LeafletMap() {
                 ></div>
               </div>
 
-              {/* Moving dot */}
               <div
                 className="absolute top-[-4px] h-3.5 w-3.5 rounded-full bg-blue-600 transition-transform duration-200"
                 style={{
-                  left: `calc(${tracker}% - 0.8rem)`, // 0.875rem = 14px = half of 3.5
+                  left: `calc(${tracker}% - 0.8rem)`,
                 }}
               ></div>
             </div>
 
-            {/* Buttons & Slider */}
             <div className="flex flex-wrap gap-4 items-center justify-center w-full sm:w-auto">
               {playpause ? (
                 <button
