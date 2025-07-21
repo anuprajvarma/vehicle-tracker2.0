@@ -164,7 +164,7 @@ export default function LeafletMap() {
             <div className="w-[19rem] flex flex-col gap-4 py-5 text-xs">
               <div className="flex justify-between h-6">
                 <div className="flex gap-1 items-center">
-                  <div className="p-1 border rounded-full bg-[#4860C1]">
+                  <div className="p-1 border rounded-full bg-blue-600">
                     <FaCarAlt size={20} className="text-white" />
                   </div>
                   <p className="font-semibold">WIRELESS</p>
@@ -221,28 +221,42 @@ export default function LeafletMap() {
         </Marker>
       </MapContainer>
 
-      <div className="fixed bottom-2 left-0 w-full flex flex-col gap-2 justify-center items-center z-[999] text-black">
+      <div className="fixed md:bottom-2 bottom-6 left-0 w-full flex flex-col gap-2 justify-center items-center z-[999] text-black">
         {notrack ? (
-          <div className="w-[50rem] flex gap-4 items-center bg-white shadow-lg rounded p-4">
-            <div className="w-[25rem] flex items-center bg-gray-200 rounded-full h-1.5 mb-4 dark:bg-gray-700">
+          <div className="max-w-[40rem] md:w-[40rem] sm:w-[30rem] w-[20rem] flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-center bg-white shadow-lg rounded-xl p-4">
+            {/* Progress Bar */}
+
+            <div className="relative w-full sm:ml-3 ml-2">
+              {/* Progress bar */}
+              <div className="w-full h-1.5 bg-[#155dfc]/40 rounded-r-full">
+                <div
+                  className="bg-blue-600 h-1.5 rounded-full"
+                  style={{ width: `${tracker}%` }}
+                ></div>
+              </div>
+
+              {/* Moving dot */}
               <div
-                className={`bg-blue-600 h-1.5 rounded-l-full dark:bg-blue-500`}
-                style={{ width: `${tracker}%` }}
+                className="absolute top-[-4px] h-3.5 w-3.5 rounded-full bg-blue-600 transition-transform duration-200"
+                style={{
+                  left: `calc(${tracker}% - 0.8rem)`, // 0.875rem = 14px = half of 3.5
+                }}
               ></div>
-              <div className="bg-blue-600 h-3.5 w-3.5 rounded-full dark:bg-blue-500"></div>
             </div>
-            <div className="flex gap-6">
+
+            {/* Buttons & Slider */}
+            <div className="flex flex-wrap gap-4 items-center justify-center w-full sm:w-auto">
               {playpause ? (
                 <button
                   onClick={() => play("pause")}
-                  className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
+                  className="text-white flex items-center cursor-pointer justify-center bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
                 >
                   <FaPause />
                 </button>
               ) : (
                 <button
                   onClick={() => play("play")}
-                  className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
+                  className="text-white flex items-center justify-center cursor-pointer  bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
                 >
                   <IoPlay />
                 </button>
@@ -251,41 +265,103 @@ export default function LeafletMap() {
               <button
                 type="button"
                 onClick={() => play("reset")}
-                className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
+                className="text-white bg-blue-600 cursor-pointer  hover:bg-blue-700 px-6 py-2 rounded-2xl"
               >
                 <RxCountdownTimer size={16} />
               </button>
-              <Box sx={{ width: 150 }}>
-                <Slider
-                  color="secondary"
-                  aria-label="Temperature"
-                  defaultValue={1}
-                  value={speed}
-                  onChange={(e, newValue) => setSpeed(newValue)}
-                  onChangeCommitted={(e, newValue) => {
-                    vspeedRef.current = newValue * 1000;
-                    if (intervalRef.current) {
-                      console.log("adioafsdl");
-                      clearInterval(intervalRef.current);
-                      play("play");
-                    } else {
-                      play("play");
-                    }
-                  }}
-                  valueLabelDisplay="auto"
-                  shiftStep={2}
-                  step={1}
-                  marks
-                  min={1}
-                  max={5}
-                />
-              </Box>
+
+              <div className="flex justify-center items-center w-full sm:w-auto">
+                <Box sx={{ width: 150 }}>
+                  <Slider
+                    color="secondary"
+                    aria-label="Speed"
+                    defaultValue={1}
+                    value={speed}
+                    onChange={(e, newValue) => setSpeed(newValue)}
+                    onChangeCommitted={(e, newValue) => {
+                      vspeedRef.current = newValue * 1000;
+                      if (intervalRef.current) {
+                        clearInterval(intervalRef.current);
+                        play("play");
+                      } else {
+                        play("play");
+                      }
+                    }}
+                    valueLabelDisplay="auto"
+                    step={1}
+                    marks
+                    min={1}
+                    max={5}
+                  />
+                </Box>
+              </div>
             </div>
           </div>
         ) : (
+          //   <div className="md:w-[40rem] sm:w-[30rem] w-[20rem] flex gap-4 items-center bg-white shadow-lg rounded p-4">
+          //     <div className="w-[25rem] flex items-center bg-gray-200 rounded-full h-1.5 mb-4 dark:bg-gray-700">
+          //       <div
+          //         className={`bg-blue-600 h-1.5 rounded-l-full dark:bg-blue-500`}
+          //         style={{ width: `${tracker}%` }}
+          //       ></div>
+          //       <div className="bg-blue-600 h-3.5 w-3.5 rounded-full dark:bg-blue-500"></div>
+          //     </div>
+
+          //     <div className="flex gap-6 items-center justify-center">
+          //       {playpause ? (
+          //         <button
+          //           onClick={() => play("pause")}
+          //           className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
+          //         >
+          //           <FaPause />
+          //         </button>
+          //       ) : (
+          //         <button
+          //           onClick={() => play("play")}
+          //           className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
+          //         >
+          //           <IoPlay />
+          //         </button>
+          //       )}
+          //       <button
+          //         type="button"
+          //         onClick={() => play("reset")}
+          //         className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
+          //       >
+          //         <RxCountdownTimer size={16} />
+          //       </button>
+          //       <div className="flex justify-center items-center">
+          //         <Box sx={{ width: 150 }}>
+          //           <Slider
+          //             color="secondary"
+          //             aria-label="Temperature"
+          //             defaultValue={1}
+          //             value={speed}
+          //             onChange={(e, newValue) => setSpeed(newValue)}
+          //             onChangeCommitted={(e, newValue) => {
+          //               vspeedRef.current = newValue * 1000;
+          //               if (intervalRef.current) {
+          //                 console.log("adioafsdl");
+          //                 clearInterval(intervalRef.current);
+          //                 play("play");
+          //               } else {
+          //                 play("play");
+          //               }
+          //             }}
+          //             valueLabelDisplay="auto"
+          //             shiftStep={2}
+          //             step={1}
+          //             marks
+          //             min={1}
+          //             max={5}
+          //           />
+          //         </Box>
+          //       </div>
+          //     </div>
+          //   </div>
           <></>
         )}
-        <div className="w-[50rem] bg-white shadow-lg rounded">
+        <div className="md:w-[40rem] sm:w-[30rem] w-[20rem] bg-white shadow-lg rounded">
           <button
             onClick={() => setShowFilters(!showFilters)}
             className="w-full flex items-center justify-between p-4"
@@ -312,29 +388,31 @@ export default function LeafletMap() {
 
           {showFilters && (
             <div className="flex justify-center w-full px-4 pb-4">
-              <div className="flex justify-between w-full max-w-[40rem] gap-6">
-                <select className="border px-2 py-1 rounded">
-                  <option value="WIRELESS">WIRELESS</option>
-                  <option value="WIRED">WIRED</option>
-                </select>
+              <div className="flex flex-col sm:flex-row justify-between w-full max-w-[30rem] gap-6">
+                <div className="flex gap-6">
+                  <select className="border px-2 py-1 rounded">
+                    <option value="WIRELESS">WIRELESS</option>
+                    <option value="WIRED">WIRED</option>
+                  </select>
 
-                <select
-                  value={selectedOption}
-                  onChange={handleChange}
-                  className="border px-2 py-1 rounded"
-                >
-                  <option value="Today">Today</option>
-                  <option value="Previous day">Previous day</option>
-                  <option value="This week">This week</option>
-                  <option value="Previous week">Previous week</option>
-                  <option value="This month">This month</option>
-                  <option value="Previous month">Previous month</option>
-                </select>
+                  <select
+                    value={selectedOption}
+                    onChange={handleChange}
+                    className="border px-2 py-1 rounded"
+                  >
+                    <option value="Today">Today</option>
+                    <option value="Previous day">Previous day</option>
+                    <option value="This week">This week</option>
+                    <option value="Previous week">Previous week</option>
+                    <option value="This month">This month</option>
+                    <option value="Previous month">Previous month</option>
+                  </select>
+                </div>
 
                 <button
                   type="button"
                   onClick={showpolyline}
-                  className="text-white bg-blue-600 hover:bg-blue-700 px-5 py-1 rounded"
+                  className="text-white bg-blue-600 hover:bg-blue-700 px-5 py-1 rounded cursor-pointer"
                 >
                   Show
                 </button>
