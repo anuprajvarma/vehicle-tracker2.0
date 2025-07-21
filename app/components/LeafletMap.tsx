@@ -1,6 +1,7 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import dynamic from "next/dynamic";
+// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState, useRef } from "react";
@@ -27,6 +28,22 @@ import {
 } from "../constants/pathData";
 import RecenterMap from "./RecenterMap";
 import CarInfo from "./CarInfo";
+
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
+  ssr: false,
+});
 
 const DefaultIcon = L.icon({
   iconUrl: "./vehicle.svg",
@@ -131,12 +148,12 @@ export default function LeafletMap() {
   return (
     <div className="relative h-screen w-full">
       <MapContainer
-        center={path[0]}
+        center={path.length > 0 ? path[0] : [0, 0]}
         zoom={15}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
       >
-        <RecenterMap center={path[0]} />
+        {path.length > 0 && <RecenterMap center={path[0]} />}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

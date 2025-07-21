@@ -1,21 +1,21 @@
-import { useEffect } from "react";
+"use client";
+
 import { useMap } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
+import { useEffect } from "react";
+import L from "leaflet";
 
 interface RecenterMapProps {
-  center: LatLngExpression;
+  center: L.LatLngExpression; // Accepts [number, number] or LatLng
 }
 
-const RecenterMap = ({ center }: RecenterMapProps) => {
+export default function RecenterMap({ center }: RecenterMapProps) {
   const map = useMap();
 
   useEffect(() => {
     if (center) {
-      map.setView(center, map.getZoom());
+      map.setView(center);
     }
   }, [center, map]);
 
   return null;
-};
-
-export default RecenterMap;
+}

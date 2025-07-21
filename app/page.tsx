@@ -1,13 +1,15 @@
-import Head from "next/head";
-import LeafletMap from "./components/LeafletMap";
+"use client";
+
+import dynamic from "next/dynamic";
+
+const LeafletMapClient = dynamic(() => import("./components/LeafletMap"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Leaflet Map</title>
-      </Head>
-      <LeafletMap />
+      <LeafletMapClient />
     </>
   );
 }
