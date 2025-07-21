@@ -10,8 +10,12 @@ import { IoPlay } from "react-icons/io5";
 import { FaPause } from "react-icons/fa6";
 import { PiMapPinFill } from "react-icons/pi";
 import { RxCountdownTimer } from "react-icons/rx";
+import { BsFuelPumpFill } from "react-icons/bs";
+import { MdBatteryFull } from "react-icons/md";
 import PathWithArrows from "./Direction";
 import Slider from "@mui/material/Slider";
+import { GiPadlock } from "react-icons/gi";
+import { IoMdKey } from "react-icons/io";
 import Box from "@mui/material/Box";
 import {
   todayPath,
@@ -22,6 +26,7 @@ import {
   previousMonthPath,
 } from "../constants/pathData";
 import RecenterMap from "./RecenterMap";
+import CarInfo from "./CarInfo";
 
 const DefaultIcon = L.icon({
   iconUrl: "./vehicle.svg",
@@ -139,7 +144,7 @@ export default function LeafletMap() {
         {notrack ? <PathWithArrows positions={path} color="blue" /> : <></>}
         <Marker position={notrack ? path[currentIndex] : [25.1367, 82.56]}>
           <Popup>
-            <div className="w-[15rem] h-[30rem] flex flex-col gap-4 py-5 text-xs">
+            <div className="w-[19rem] flex flex-col gap-4 py-5 text-xs">
               <div className="flex justify-between h-6">
                 <div className="flex gap-1 items-center">
                   <div className="p-1 border rounded-full">
@@ -159,6 +164,37 @@ export default function LeafletMap() {
                     A22, New Panchganga Hsg.So, Vijay Nagar, Deolali Camp,
                     Nashik Maharashtra 422001
                   </div>
+                </div>
+              </div>
+              <div className="w-full h-full flex justify-center">
+                <div className="flex flex-wrap gap-4 items-center pl-2">
+                  <CarInfo info="0.00 km/h" infotype="Speed" />
+                  <CarInfo info="0.00 km/h" infotype="Distance" />
+                  <CarInfo info="16 %" infotype="Battery" />
+                  <CarInfo info="0.00 km/h" infotype="Total Distance" />
+                  <CarInfo
+                    info="0.00 km/h"
+                    infotype="Distance From Last Stop"
+                  />
+                  <CarInfo info="00h.00m" infotype="Total Running" />
+                  <CarInfo info="00h.00m" infotype="Today Stopped" />
+                  <CarInfo info="STOPPED" infotype="Current Status" />
+                  <CarInfo info="0.00 km/h" infotype="Today Max Speed" />
+                  <CarInfo info="16 %" infotype="Custom Value" />
+                </div>
+              </div>
+              <div className="w-full flex gap-4 items-center justify-center">
+                <div className="px-6 py-1.5 rounded-full bg-amber-500">
+                  <IoMdKey size={20} />
+                </div>
+                <div className="px-6 py-1.5 rounded-full bg-amber-500">
+                  <MdBatteryFull size={20} />
+                </div>
+                <div className="px-6 py-1.5 rounded-full bg-amber-500">
+                  <BsFuelPumpFill size={20} />
+                </div>
+                <div className="px-6 py-1.5 rounded-full bg-amber-500">
+                  <GiPadlock size={20} />
                 </div>
               </div>
             </div>
