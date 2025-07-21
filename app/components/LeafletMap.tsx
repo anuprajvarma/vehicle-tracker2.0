@@ -1,10 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { GoClock } from "react-icons/go";
 import { FaCarAlt } from "react-icons/fa";
 import { IoPlay } from "react-icons/io5";
@@ -12,6 +11,7 @@ import { FaPause } from "react-icons/fa6";
 import { PiMapPinFill } from "react-icons/pi";
 import { RxCountdownTimer } from "react-icons/rx";
 import { BsFuelPumpFill } from "react-icons/bs";
+import { getVehicleIcon } from "./HelperFuntion";
 import { MdBatteryFull } from "react-icons/md";
 import PathWithArrows from "./Direction";
 import Slider from "@mui/material/Slider";
@@ -45,12 +45,6 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
 });
 
-const DefaultIcon = L.icon({
-  iconUrl: "./vehicle.svg",
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
-});
-
 export default function LeafletMap() {
   let interval;
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -71,6 +65,10 @@ export default function LeafletMap() {
     [25.13496, 82.56844],
     [25.1337, 82.56443],
   ]);
+
+  const icon = getVehicleIcon(
+    playpause === false ? "/redvehicle.png" : "/bluevehicle.png"
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(e.target.value);
@@ -117,10 +115,6 @@ export default function LeafletMap() {
     }
   };
 
-  useEffect(() => {
-    L.Marker.prototype.options.icon = DefaultIcon;
-  }, []);
-
   const showpolyline = () => {
     setCurrentIndex(0);
     setNoTrack(true);
@@ -159,7 +153,10 @@ export default function LeafletMap() {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
         {notrack ? <PathWithArrows positions={path} color="blue" /> : <></>}
-        <Marker position={notrack ? path[currentIndex] : [25.1367, 82.56]}>
+        <Marker
+          position={notrack ? path[currentIndex] : [25.1367, 82.56]}
+          icon={icon}
+        >
           <Popup>
             <div className="w-[19rem] flex flex-col gap-4 py-5 text-xs">
               <div className="flex justify-between h-6">
@@ -298,67 +295,6 @@ export default function LeafletMap() {
             </div>
           </div>
         ) : (
-          //   <div className="md:w-[40rem] sm:w-[30rem] w-[20rem] flex gap-4 items-center bg-white shadow-lg rounded p-4">
-          //     <div className="w-[25rem] flex items-center bg-gray-200 rounded-full h-1.5 mb-4 dark:bg-gray-700">
-          //       <div
-          //         className={`bg-blue-600 h-1.5 rounded-l-full dark:bg-blue-500`}
-          //         style={{ width: `${tracker}%` }}
-          //       ></div>
-          //       <div className="bg-blue-600 h-3.5 w-3.5 rounded-full dark:bg-blue-500"></div>
-          //     </div>
-
-          //     <div className="flex gap-6 items-center justify-center">
-          //       {playpause ? (
-          //         <button
-          //           onClick={() => play("pause")}
-          //           className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
-          //         >
-          //           <FaPause />
-          //         </button>
-          //       ) : (
-          //         <button
-          //           onClick={() => play("play")}
-          //           className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
-          //         >
-          //           <IoPlay />
-          //         </button>
-          //       )}
-          //       <button
-          //         type="button"
-          //         onClick={() => play("reset")}
-          //         className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-2xl"
-          //       >
-          //         <RxCountdownTimer size={16} />
-          //       </button>
-          //       <div className="flex justify-center items-center">
-          //         <Box sx={{ width: 150 }}>
-          //           <Slider
-          //             color="secondary"
-          //             aria-label="Temperature"
-          //             defaultValue={1}
-          //             value={speed}
-          //             onChange={(e, newValue) => setSpeed(newValue)}
-          //             onChangeCommitted={(e, newValue) => {
-          //               vspeedRef.current = newValue * 1000;
-          //               if (intervalRef.current) {
-          //                 console.log("adioafsdl");
-          //                 clearInterval(intervalRef.current);
-          //                 play("play");
-          //               } else {
-          //                 play("play");
-          //               }
-          //             }}
-          //             valueLabelDisplay="auto"
-          //             shiftStep={2}
-          //             step={1}
-          //             marks
-          //             min={1}
-          //             max={5}
-          //           />
-          //         </Box>
-          //       </div>
-          //     </div>
-          //   </div>
           <></>
         )}
         <div className="md:w-[40rem] sm:w-[30rem] w-[20rem] bg-white shadow-lg rounded">

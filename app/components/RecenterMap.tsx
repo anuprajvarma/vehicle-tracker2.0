@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import L from "leaflet";
 
 interface RecenterMapProps {
-  center: L.LatLngExpression; // Accepts [number, number] or LatLng
+  center: L.LatLngExpression;
 }
 
 export default function RecenterMap({ center }: RecenterMapProps) {
