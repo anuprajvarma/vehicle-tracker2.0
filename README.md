@@ -11,5 +11,5 @@
 - [Next.js](https://nextjs.org/)
 - [Typescript](https://www.typescriptlang.org/)
 - [TailwindCSS](https://tailwindcss.com/)
-- [Leaflet,](<[https://www.blocknotejs.org/](https://leafletjs.com/)>)
+- [Leaflet](https://leafletjs.com/)
 - [Material UI](https://mui.com/material-ui/)
