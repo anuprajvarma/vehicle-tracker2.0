@@ -176,10 +176,12 @@ export default function LeafletMap() {
               </div>
               <div className="flex gap-1 items-center">
                 <PiMapPinFill className="text-[#049596]" size={20} />
-                <div className="w-full overflow-hidden whitespace-nowrap">
-                  <div className="inline-block animate-marquee px-4">
-                    A22, New Panchganga Hsg.So, Vijay Nagar, Deolali Camp,
-                    Nashik Maharashtra 422001
+                <div className="overflow-hidden w-full">
+                  <div className="whitespace-nowrap animate-marquee">
+                    <span className="inline-block px-4">
+                      A22, New Panchganga Hsg.So, Vijay Nagar, Deolali Camp,
+                      Nashik Maharashtra 422001
+                    </span>
                   </div>
                 </div>
               </div>
