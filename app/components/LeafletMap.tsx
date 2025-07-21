@@ -164,18 +164,18 @@ export default function LeafletMap() {
             <div className="w-[19rem] flex flex-col gap-4 py-5 text-xs">
               <div className="flex justify-between h-6">
                 <div className="flex gap-1 items-center">
-                  <div className="p-1 border rounded-full">
-                    <FaCarAlt />
+                  <div className="p-1 border rounded-full bg-[#4860C1]">
+                    <FaCarAlt size={20} className="text-white" />
                   </div>
-                  <p>WIRELESS</p>
+                  <p className="font-semibold">WIRELESS</p>
                 </div>
-                <div className="flex gap-1 items-center">
+                <div className="flex gap-1 items-center bg-[#59E155]/30 text-[#177020] px-2 rounded-sm">
                   <GoClock size={16} />
-                  <p>Jul 20, 07:09 AM</p>
+                  <p className="font-semibold">Jul 20, 07:09 AM</p>
                 </div>
               </div>
               <div className="flex gap-1 items-center">
-                <PiMapPinFill size={16} />
+                <PiMapPinFill className="text-[#049596]" size={20} />
                 <div className="w-full overflow-hidden whitespace-nowrap">
                   <div className="inline-block animate-marquee px-4">
                     A22, New Panchganga Hsg.So, Vijay Nagar, Deolali Camp,
@@ -201,17 +201,17 @@ export default function LeafletMap() {
                 </div>
               </div>
               <div className="w-full flex gap-4 items-center justify-center">
-                <div className="px-6 py-1.5 rounded-full bg-amber-500">
-                  <IoMdKey size={20} />
+                <div className="px-6 py-1.5 rounded-full bg-amber-500/20">
+                  <IoMdKey className="text-amber-600" size={20} />
                 </div>
-                <div className="px-6 py-1.5 rounded-full bg-amber-500">
-                  <MdBatteryFull size={20} />
+                <div className="px-6 py-1.5 rounded-full bg-amber-500/20">
+                  <MdBatteryFull className="text-amber-600" size={20} />
                 </div>
-                <div className="px-6 py-1.5 rounded-full bg-amber-500">
-                  <BsFuelPumpFill size={20} />
+                <div className="px-6 py-1.5 rounded-full bg-amber-500/20">
+                  <BsFuelPumpFill className="text-amber-600" size={20} />
                 </div>
-                <div className="px-6 py-1.5 rounded-full bg-amber-500">
-                  <GiPadlock size={20} />
+                <div className="px-6 py-1.5 rounded-full bg-amber-500/20">
+                  <GiPadlock className="text-amber-600" size={20} />
                 </div>
               </div>
             </div>
