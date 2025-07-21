@@ -213,13 +213,22 @@ export default function LeafletMap() {
               <div className="bg-blue-600 h-3.5 w-3.5 rounded-full dark:bg-blue-500"></div>
             </div>
             <div className="flex gap-6">
-              <div className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl">
-                {playpause ? (
-                  <FaPause onClick={() => play("pause")} />
-                ) : (
-                  <IoPlay onClick={() => play("play")} />
-                )}
-              </div>
+              {playpause ? (
+                <button
+                  onClick={() => play("pause")}
+                  className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
+                >
+                  <FaPause />
+                </button>
+              ) : (
+                <button
+                  onClick={() => play("play")}
+                  className="text-white flex items-center bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-2xl"
+                >
+                  <IoPlay />
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={() => play("reset")}
