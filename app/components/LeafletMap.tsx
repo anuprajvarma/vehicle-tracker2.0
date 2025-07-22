@@ -274,10 +274,7 @@ export default function LeafletMap() {
       <div className="fixed md:bottom-2 bottom-6 left-0 w-full flex flex-col gap-2 justify-center items-center z-[999] text-black">
         {notrack ? (
           <div className="max-w-[40rem] md:w-[40rem] sm:w-[30rem] w-[20rem] flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-center bg-white shadow-lg rounded-xl p-4">
-            {/* Progress Bar */}
-
             <div className="relative w-full sm:ml-3 ml-2">
-              {/* Progress bar */}
               <div className="w-full h-1.5 bg-[#155dfc]/40 rounded-r-full">
                 <div
                   className="bg-blue-600 h-1.5 rounded-full"
@@ -292,7 +289,6 @@ export default function LeafletMap() {
                 }}
               ></div>
             </div>
-
             <div className="flex flex-wrap gap-4 items-center justify-center w-full sm:w-auto">
               {playpause ? (
                 <button
@@ -309,7 +305,6 @@ export default function LeafletMap() {
                   <IoPlay />
                 </button>
               )}
-
               <button
                 type="button"
                 onClick={() => play("reset")}
@@ -317,7 +312,6 @@ export default function LeafletMap() {
               >
                 <RxCountdownTimer size={16} />
               </button>
-
               <div className="flex justify-center items-center w-full sm:w-auto">
                 <Box sx={{ width: 150 }}>
                   <Slider
